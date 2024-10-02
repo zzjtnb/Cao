@@ -89,7 +89,7 @@ function calculate(e: Event) {
         需要 <span>{{ stock.result }}</span> 次涨停才能达到目标价 <span>{{ stock.target }}</span> 元
       </div>
       <div v-if="stock.type === 'limit'" class="result">
-        经过 <span> {{ stock.result }}</span> 次涨停后的价格: <span>{{ stock.limit }}</span> 元
+        经过 <span> {{ stock.limit }}</span> 次涨停后的价格: <span>{{ stock.result }}</span> 元
       </div>
     </m-dialog>
   </div>
