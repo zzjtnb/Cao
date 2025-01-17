@@ -34,51 +34,49 @@ const music = reactive({
   cueID: 0,
 })
 
+function onTrackLoad() {
+  if (trackEl?.value?.track) {
+    console.log('音频数据加载完成')
+    if (trackEl.value.track?.cues?.length) {
+      // 当 track 的 cues 加载完毕后，绘制字符
+      music.cues = Array.from(trackEl.value.track.cues as unknown as Iterable<VTTCue>)
+      const clientWidth = document.body.clientWidth || 1920
+      base.value = +((clientWidth - clientWidth * 0.1 - music.cues.length * 10) / music.cues.length).toFixed(2)
+      // console.log('音轨数据:', music.cues)
+      // music.cues.map(async (cue: VTTCue) => {
+      //   // 等待 refs 被设置后再绘制字符
+      //   await nextTick()
+      //   if (music.refs[+cue.id - 1]) {
+      //     // drawCharacter(cue)
+      //   }
+      // })
+    }
+
+    trackEl.value.addEventListener('cuechange', async () => {
+      const activeCues = trackEl.value?.track?.activeCues
+      if (activeCues && activeCues.length > 0) {
+        const cue = activeCues[0] as VTTCue // 取第一个活动提示
+        music.cueID = +cue.id
+
+        const hanziWriterRef = music.refs[+cue.id - 1]
+        if (hanziWriterRef) {
+          const time = +(+((cue.endTime - cue.startTime) / cue.text.length).toFixed(2) * 100)
+          hanziWriterRef?.setColor('strokeColor', '#f03752') // 调用子组件的 setColor 方法
+          hanziWriterRef?.setColor('radicalColor', '#f03752') // 调用子组件的 setColor 方法
+          // 调用子组件的 animateAll 方法
+          hanziWriterRef?.animateAll().then(async () => {
+            hanziWriterRef?.setColor('strokeColor', hanziOptions.strokeColor)
+            hanziWriterRef?.setColor('radicalColor', hanziOptions.strokeColor)
+          })
+        }
+      }
+    })
+  }
+}
 // 组件挂载时的初始化操作
 onMounted(async () => {
   await nextTick()
   console.log('页面数据更新完毕了')
-
-  // 使用 loadeddata 事件
-  audioEl.value?.addEventListener('loadeddata', () => {
-    console.log('音频数据加载完成')
-    if (trackEl.value && trackEl.value.track) {
-      if (trackEl.value.track.cues) {
-        // 当 track 的 cues 加载完毕后，绘制字符
-        music.cues = Array.from(trackEl.value.track.cues as unknown as Iterable<VTTCue>)
-        const clientWidth = document.body.clientWidth || 1920
-        base.value = +((clientWidth - clientWidth * 0.1 - music.cues.length * 10) / music.cues.length).toFixed(2)
-        // console.log('音轨数据:', music.cues)
-        music.cues.map(async (cue: VTTCue) => {
-          // 等待 refs 被设置后再绘制字符
-          await nextTick()
-          if (music.refs[+cue.id - 1]) {
-            // drawCharacter(cue)
-          }
-        })
-      }
-
-      trackEl.value.addEventListener('cuechange', async () => {
-        const activeCues = trackEl.value?.track?.activeCues
-        if (activeCues && activeCues.length > 0) {
-          const cue = activeCues[0] as VTTCue // 取第一个活动提示
-          music.cueID = +cue.id
-
-          const hanziWriterRef = music.refs[+cue.id - 1]
-          if (hanziWriterRef) {
-            const time = +(+((cue.endTime - cue.startTime) / cue.text.length).toFixed(2) * 100)
-            hanziWriterRef?.setColor('strokeColor', '#f03752') // 调用子组件的 setColor 方法
-            hanziWriterRef?.setColor('radicalColor', '#f03752') // 调用子组件的 setColor 方法
-            // 调用子组件的 animateAll 方法
-            hanziWriterRef?.animateAll().then(async () => {
-              hanziWriterRef?.setColor('strokeColor', hanziOptions.strokeColor)
-              hanziWriterRef?.setColor('radicalColor', hanziOptions.strokeColor)
-            })
-          }
-        }
-      })
-    }
-  })
 
   audioEl.value?.addEventListener('play', () => {
     music.play = true
@@ -94,9 +92,7 @@ onMounted(async () => {
 })
 
 function playMusic(index?: number) {
-  console.log(audioEl.value)
   if (audioEl.value) {
-    console.log('🚀 ~ playMusic ~ index:', index)
     if (music.play) {
       audioEl.value.pause() // 暂停音乐
     }
@@ -139,7 +135,7 @@ function setOptions(cue: VTTCue) {
       <ClientOnly>
         <audio ref="audioEl" autoplay loop>
           <source src="/audio/cc.mp3" type="audio/mp3">
-          <track ref="trackEl" default kind="subtitles" src="/audio/cc.vtt">
+          <track ref="trackEl" default kind="subtitles" src="/audio/cc.vtt" @load="onTrackLoad">
         </audio>
       </ClientOnly>
     </div>
