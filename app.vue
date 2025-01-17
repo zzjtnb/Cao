@@ -15,6 +15,8 @@ if (process.client) {
   // 不使用 window.onload 以免冲突
   // console.log('页面加载完毕');
 }
+// corepack up
+// corepack use pnpm@9.x
 </script>
 
 <template>

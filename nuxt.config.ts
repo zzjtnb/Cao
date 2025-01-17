@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   app: {
+    baseURL: '/',
     head: {
       htmlAttrs: {
         lang: 'zh-Hans-CN',
@@ -29,6 +30,9 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1,user-scalable=no' },
       ],
     },
+    rootAttrs: {
+      id: 'nuxt',
+    },
   },
   router: {
     options: {
@@ -53,7 +57,11 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxtjs/google-fonts', '@shuimo-design/shuimo-ui-nuxt'],
+  modules: ['@nuxtjs/google-fonts', '@shuimo-design/shuimo-ui-nuxt', 'nitro-cloudflare-dev'],
+  nitro: {
+    preset: 'cloudflare-pages',
+  },
+
   build: {
     transpile: ['shuimo-ui'],
   },

@@ -164,8 +164,8 @@ function changeColor() {
       <img src="/images/music.png" :class="music.play ? 'active' : ''">
       <ClientOnly>
         <audio ref="audioEl" autoplay loop>
-          <source src="/audio/曹操.mp3" type="audio/mp3">
-          <track ref="trackEl" default kind="subtitles" src="/audio/曹操.vtt">
+          <source src="/audio/cc.mp3" type="audio/mp3">
+          <track ref="trackEl" default kind="subtitles" src="/audio/cc.vtt">
         </audio>
       </ClientOnly>
     </div>
