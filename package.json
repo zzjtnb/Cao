@@ -37,6 +37,6 @@
     "nitro-cloudflare-dev": "^0.2.1",
     "stylelint": "^16.13.2",
     "stylelint-config-zzjtnb": "^0.0.6",
-    "wrangler": "^3.103.1"
+    "wrangler": "^4.0.0"
   }
 }
