@@ -36,7 +36,7 @@
     "eslint-plugin-format": "^0.1.3",
     "nitro-cloudflare-dev": "^0.2.1",
     "stylelint": "^16.13.2",
-    "stylelint-config-zzjtnb": "^0.0.6",
+    "stylelint-config-zzjtnb": "^0.0.7",
     "wrangler": "^3.103.1"
   }
 }
